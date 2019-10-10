@@ -1,0 +1,5 @@
+{
+    "name": "TaGoogleAssistantParser",
+    "package_name": "ta_google_assistant_parser",
+    "effect": "synchronous"
+}

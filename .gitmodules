@@ -1,0 +1,15 @@
+[submodule "src/temoto_action_engine"]
+	path = src/temoto_action_engine
+	url = https://github.com/temoto-telerobotics/temoto_action_engine
+[submodule "src/temoto"]
+	path = src/temoto
+	url = https://github.com/temoto-telerobotics/temoto
+[submodule "src/temoto_action_assistant"]
+	path = src/temoto_action_assistant
+	url = https://github.com/temoto-telerobotics/temoto_action_assistant
+[submodule "src/temoto_core"]
+	path = src/temoto_core
+	url = https://github.com/temoto-telerobotics/temoto_core
+[submodule "src/file_template_parser"]
+	path = src/file_template_parser
+	url = https://github.com/ut-ims-robotics/file_template_parser
