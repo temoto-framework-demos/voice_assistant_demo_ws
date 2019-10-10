@@ -28,6 +28,7 @@
 #include <curlpp/Options.hpp>
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
+#include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 
 /* 
@@ -75,6 +76,7 @@ void executeTemotoAction()
     // If the response is differen from a previous one then process the result
     if (response_str != response_str_tmp)
     {
+      TEMOTO_INFO_STREAM("Received a new query. Processing ...");
       response_str = response_str_tmp;
       try
       {
@@ -97,17 +99,26 @@ void executeTemotoAction()
           PvfValue pvf_value;
           std::string param_name = it->name.GetString();
 
+          bool has_value = false;
           if (it->value.IsString())
           {
             pvf_value.type = "string";
             pvf_value.value_string = getStringFromValue(it->value);
+            if (pvf_value.value_string != "")
+            {
+              has_value = true;
+            }
           }
           else if (it->value.IsNumber())
           {
             pvf_value.type = "number";
             pvf_value.value_number = getNumberFromValue(it->value);
           }
-          parameters[param_name] = pvf_value;
+
+          if (has_value)
+          {
+            parameters[param_name] = pvf_value;
+          }
         }
 
         /*
@@ -168,9 +179,9 @@ void executeTemotoAction()
          * Convert the JSON datastructure to a JSON string
          */
         rapidjson::StringBuffer strbuf;
-        rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(strbuf);
         fromScratch.Accept(writer);
-        std::cout << strbuf.GetString() << std::endl;
+        TEMOTO_INFO_STREAM(strbuf.GetString());
 
         /*
          * Create a UMRF graph ROS message and publish it
@@ -236,7 +247,7 @@ double getNumberFromValue(const rapidjson::Value& value)
 ~TaGoogleAssistantParser()
 {
   // ---> YOUR CONSTRUCTION ROUTINES HERE <--- //
-  TEMOTO_PRINT_OF("Destructor", getUmrfPtr()->getName());
+  TEMOTO_INFO_STREAM("Destructor");
 }
 
 ros::NodeHandle nh_;
