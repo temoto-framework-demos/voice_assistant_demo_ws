@@ -56,7 +56,7 @@ struct PvfValue
 void executeTemotoAction()
 {
   // Set up the UMRF JSON graph publisher
-  umrf_json_graph_pub_ = nh_.advertise<temoto_action_engine::UmrfJsonGraph>("umrf_graph_topic", 1);
+  umrf_json_graph_pub_ = nh_.advertise<temoto_action_engine::UmrfJsonGraph>("/umrf_graph_topic", 1);
 
   // Loop until the action is required to stop
   while (actionOk())
@@ -76,7 +76,7 @@ void executeTemotoAction()
     // If the response is differen from a previous one then process the result
     if (response_str != response_str_tmp)
     {
-      TEMOTO_INFO_STREAM("Received a new query. Processing ...");
+      TEMOTO_INFO_STREAM("Received a new query from Google Assistant. Processing ...");
       response_str = response_str_tmp;
       try
       {
@@ -99,15 +99,15 @@ void executeTemotoAction()
           PvfValue pvf_value;
           std::string param_name = it->name.GetString();
 
-          bool has_value = false;
+          bool has_value = true;
           if (it->value.IsString())
           {
             pvf_value.type = "string";
             pvf_value.value_string = getStringFromValue(it->value);
-            if (pvf_value.value_string != "")
-            {
-              has_value = true;
-            }
+            // if (pvf_value.value_string == "")
+            // {
+            //   has_value = false;
+            // }
           }
           else if (it->value.IsNumber())
           {
@@ -120,6 +120,22 @@ void executeTemotoAction()
             parameters[param_name] = pvf_value;
           }
         }
+
+        /*
+         * Find if a specific target was given for the graph
+         */
+        umrf_json_graph_msg_.targets.clear();
+        if (parameters.find("target") != parameters.end())
+        {
+          umrf_json_graph_msg_.targets.push_back(parameters["target"].value_string);
+          parameters.erase("target");
+        }
+        else
+        {
+          umrf_json_graph_msg_.targets.push_back("everybody");
+        }
+
+        TEMOTO_INFO_STREAM("This message is targeted to '" << umrf_json_graph_msg_.targets.back() << "'");
 
         /*
          * Create UMRF JSON string from scratch.
@@ -146,7 +162,7 @@ void executeTemotoAction()
         // Set the notation
         fromScratch.AddMember("notation", "googleActions", allocator);
 
-        // Set the effect
+        // Set the effect to "synchronous"
         fromScratch.AddMember("effect", "synchronous", allocator);
 
         // Set the parameters via a rapidjson object type
@@ -181,17 +197,19 @@ void executeTemotoAction()
         rapidjson::StringBuffer strbuf;
         rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(strbuf);
         fromScratch.Accept(writer);
-        TEMOTO_INFO_STREAM(strbuf.GetString());
+        TEMOTO_INFO_STREAM("Parsed UMRF:\n" << strbuf.GetString());
+        TEMOTO_INFO("Publishing the UMRF graph message ...");
 
         /*
          * Create a UMRF graph ROS message and publish it
          */ 
-        temoto_action_engine::UmrfJsonGraph umrf_json_graph_msg;
-        umrf_json_graph_msg.graph_name = query_text;
-        umrf_json_graph_msg.name_match_required = 0;
-        umrf_json_graph_msg.umrf_json_strings.push_back(strbuf.GetString());
-        umrf_json_graph_pub_.publish(umrf_json_graph_msg);
+        umrf_json_graph_msg_.graph_name = action_name;
+        umrf_json_graph_msg_.name_match_required = 0;
+        umrf_json_graph_msg_.umrf_json_strings.clear();
+        umrf_json_graph_msg_.umrf_json_strings.push_back(strbuf.GetString());
+        umrf_json_graph_pub_.publish(umrf_json_graph_msg_);
 
+        TEMOTO_INFO("Done processing the Google Assistant query.");
       }
       catch(const std::exception& e)
       {
@@ -253,6 +271,7 @@ double getNumberFromValue(const rapidjson::Value& value)
 ros::NodeHandle nh_;
 ros::Publisher umrf_json_graph_pub_;
 std::string response_str;
+temoto_action_engine::UmrfJsonGraph umrf_json_graph_msg_;
 
 }; // TaGoogleAssistantParser class
 

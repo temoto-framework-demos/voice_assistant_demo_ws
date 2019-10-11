@@ -1,0 +1,14 @@
+{
+  "name":"TaDrive",
+  "package_name":"ta_drive",
+  "effect":"synchronous",
+  "input_parameters":{
+    "verb":{
+      "pvf_type":"string",
+      "pvf_updatable":"true"},
+    "direction":{
+      "pvf_type":"string",
+      "pvf_updatable":"true"
+    }
+  }
+}

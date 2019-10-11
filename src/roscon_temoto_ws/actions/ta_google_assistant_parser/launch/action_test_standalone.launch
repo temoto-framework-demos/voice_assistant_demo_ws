@@ -3,6 +3,8 @@
   <arg name="wake_word" default="ta_google_assistant_parser"/>
   <arg name="action_path" default="$(find ta_google_assistant_parser)"/>
 
+  <env name="ROSCONSOLE_FORMAT" value="[${function}] ${message}" />
+
   <node name="temoto_action_engine" pkg="temoto_action_engine" type="action_engine_node" output="screen"
         args="--sa $(arg action_path) 
               --d $(arg umrf_file) 
