@@ -12,3 +12,12 @@
 * Paste this link to the default region: https://temoto-commander-proxy.herokuapp.com/alexa-webhook
 * Select "My development endpoint is a sub-domain ..."
 * Click **Save Endpoints**
+
+## Invoke the skill
+* Open the test console
+* type "open my test app" and then type the requests, e.g., "Move Johnny forward"
+
+or ...
+* Download the Amazon Alexa app to your smartphone
+* Log in with the same account you used to create the skill
+* Press the Alexa logo and say "open my test app" and say, e.g., "Move Johnny forward"

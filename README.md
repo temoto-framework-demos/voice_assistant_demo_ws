@@ -29,8 +29,8 @@ catkin build
 
 ### Setting up the front-end system
 
-* Follow this guide to set up the *Google Assistant Action*
-* Follow this guide to set up the *Amazon Alexa Skill*
+* Follow [this guide](https://github.com/temoto-telerobotics-demos/roscon_2019_ws/tree/master/src/roscon_temoto_ws/actions/ta_google_assistant_parser/google_assistant_project) to set up the Google Assistant Action
+* Follow [this guide](https://github.com/temoto-telerobotics-demos/roscon_2019_ws/tree/master/src/roscon_temoto_ws/actions/ta_amazon_alexa_parser/amazon_alexa_skill) to set up the Amazon Alexa Skill 
 
 ### Setting up the TeMoto Commander Proxy server
 
