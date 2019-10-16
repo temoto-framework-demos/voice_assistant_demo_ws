@@ -49,4 +49,4 @@ roslaunch roscon_temoto_ws temoto.launch temoto_namespace:=Johnny
 ```
 
 The `temoto_namespace` argument is important for addressing the appropriate robot, e.g., if you say "Turn Michael clockwise" to Google Assistant
-then *Michael* is parsed as a `temoto_namespace` by [GoogleActions-to-UMRF converter action](https://github.com/temoto-telerobotics-demos/roscon_2019_ws/tree/master/src/roscon_temoto_ws/actions/ta_google_assistant_parser)
+then *Michael* is parsed as a `temoto_namespace` by [GoogleActions-to-UMRF parser action](https://github.com/temoto-telerobotics-demos/roscon_2019_ws/tree/master/src/roscon_temoto_ws/actions/ta_google_assistant_parser)
