@@ -15,7 +15,7 @@
 
 ## Invoke the skill
 * Open the test console
-* type "open my test app" and then type the requests, e.g., "Move Johnny forward"
+* Type "open my test app" and then type the requests, e.g., "Move Johnny forward"
 
 or ...
 * Download the Amazon Alexa app to your smartphone

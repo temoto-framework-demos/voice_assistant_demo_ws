@@ -3,9 +3,9 @@ Demo materials for the ROSCon 2019 presentation.
 
 ## Setup
 The demo contains 3 major components:
-* ROS catkin workspace that implements the robot control part
-* Google Action and Alexa Skill front-end
-* A server which captures Google Action/Amazon Alexa requests and allows to access the request JSON by UMRF parser TeMoto Actions
+* ***ROS catkin workspace*** that implements the robot control part
+* ***Google Action*** and ***Alexa Skill*** front-end
+* ***A server*** which captures *Google Action / Amazon Alexa* requests and allows to access the request JSON by UMRF parser TeMoto Actions ([Google Assistant](https://github.com/temoto-telerobotics-demos/roscon_2019_ws/tree/master/src/roscon_temoto_ws/actions/ta_google_assistant_parser); [Amazon Alexa](https://github.com/temoto-telerobotics-demos/roscon_2019_ws/tree/master/src/roscon_temoto_ws/actions/ta_amazon_alexa_parser))
 
 ### Setting up the catkin workspace
 
@@ -34,4 +34,19 @@ catkin build
 
 ### Setting up the TeMoto Commander Proxy server
 
-In case this server has been taken down or is inoperable, you can deploy the same server by clicking on the *Deploy to Heroku* button in https://github.com/RValner/temoto-commander-proxy
+In case this server has been taken down or is inoperable, you can deploy the same server by clicking on the `Deploy to Heroku` button in https://github.com/RValner/temoto-commander-proxy
+
+## Running the demo
+
+Launch the robot simulator
+``` bash
+roslaunch turtlebot3_fake turtlebot3_fake.launch 
+```
+
+Launch TeMoto
+``` bash
+roslaunch roscon_temoto_ws temoto.launch temoto_namespace:=Johnny
+```
+
+The `temoto_namespace` argument is important for addressing the appropriate robot, e.g., if you say "Turn Michael clockwise" to Google Assistant
+then *Michael* is parsed as a `temoto_namespace` by [GoogleActions-to-UMRF converter action](https://github.com/temoto-telerobotics-demos/roscon_2019_ws/tree/master/src/roscon_temoto_ws/actions/ta_google_assistant_parser)
