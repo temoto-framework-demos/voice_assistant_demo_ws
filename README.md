@@ -1,6 +1,8 @@
 # roscon_2019_ws
 Demo materials for the ROSCon 2019 presentation.
 
+**More information about Temoto in https://temoto-telerobotics.github.io**
+
 ## Setup
 The demo contains 3 major components:
 * ***ROS catkin workspace*** that implements the robot control part
@@ -50,6 +52,7 @@ roslaunch roscon_temoto_ws temoto.launch temoto_namespace:=Johnny
 The `temoto_namespace` argument is important for addressing the appropriate robot, e.g., if you say "Turn Michael clockwise" to Google Assistant
 then *Michael* is parsed as a `temoto_namespace` by [GoogleActions-to-UMRF parser action](https://github.com/temoto-telerobotics-demos/roscon_2019_ws/tree/master/src/roscon_temoto_ws/actions/ta_google_assistant_parser)
 
+NOTE: The `temoto_namespace` is case sensitive and Google Assistant and Amazon Alexa sometimes have hard time in parsing the name with first letter being in higher-case. This may lead to `The UMRF graph was not targeted at this Action Engine.` messages in the console. 
 
 **Invoke the *Amazon Skill / Google Action***
 * Follow [this guide](https://github.com/temoto-telerobotics-demos/roscon_2019_ws/tree/master/src/roscon_temoto_ws/actions/ta_google_assistant_parser/google_assistant_project) to invoke Google Assistant Actions

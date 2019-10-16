@@ -2,7 +2,6 @@
   <arg name="temoto_namespace" default="roscon_temoto_ws"/>
   <arg name="additional_wake_words" default="everybody"/>
   <arg name="action_packages_path" default="$(find roscon_temoto_ws)/config/action_dst.yaml" />
-  <arg name="default_umrf_path" default="$(find ta_amazon_alexa_parser)/test/invoker_umrf.json"/>
 
   <env name="ROSCONSOLE_FORMAT" value="[${function}] ${message}" />
   <env name="ROSCONSOLE_CONFIG_FILE" value="$(find roscon_temoto_ws)/config/console.conf" />  
@@ -11,6 +10,9 @@
     <!-- <node name="temoto_er_manager" pkg="temoto_er_manager" type="temoto_er_manager" output="screen" /> -->
     <!-- <node name="temoto_component_manager" pkg="temoto_component_manager" type="temoto_component_manager" output="screen" /> -->
     <node name="temoto_action_engine" pkg="temoto_action_engine" type="action_engine_node" 
-          args="--a $(arg action_packages_path) --d $(arg default_umrf_path) --mw $(arg temoto_namespace) --w $(arg additional_wake_words)" output="screen" />
+          args="--a $(arg action_packages_path) --mw $(arg temoto_namespace) --w $(arg additional_wake_words)" output="screen" />
   </group>
+
+  <node name="parser_node" pkg="temoto_action_engine" type="parser_node" output="screen" 
+        args="$(find roscon_temoto_ws)/config/startup_actions umrf_graph.txt $(arg temoto_namespace)"/>
 </launch>
