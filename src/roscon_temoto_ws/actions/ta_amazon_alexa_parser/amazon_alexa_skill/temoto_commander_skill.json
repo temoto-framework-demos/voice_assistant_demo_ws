@@ -1,0 +1,103 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "my test app",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "TaMoveRobot",
+                    "slots": [
+                        {
+                            "name": "verb",
+                            "type": "verb"
+                        },
+                        {
+                            "name": "target",
+                            "type": "AMAZON.FirstName"
+                        },
+                        {
+                            "name": "direction",
+                            "type": "direction"
+                        }
+                    ],
+                    "samples": [
+                        "{verb} {target}",
+                        "{verb} {target} {direction}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "verb",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "rotate",
+                                "synonyms": [
+                                    "spin",
+                                    "turn"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "move",
+                                "synonyms": [
+                                    "go"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "direction",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "right",
+                                "synonyms": [
+                                    "clockwise"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "left",
+                                "synonyms": [
+                                    "couterclockwise"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "forward",
+                                "synonyms": [
+                                    "ahead"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

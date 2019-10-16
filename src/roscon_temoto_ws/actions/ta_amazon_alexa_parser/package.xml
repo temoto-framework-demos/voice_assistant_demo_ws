@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>ta_google_assistant_parser</name>
+  <name>ta_amazon_alexa_parser</name>
   <version>0.0.0</version>
-  <description>The ta_google_assistant_parser package</description>
+  <description>The ta_amazon_alexa_parser package</description>
 
   <author email="valnerrobert@gmail.com">Robert Valner</author>
   

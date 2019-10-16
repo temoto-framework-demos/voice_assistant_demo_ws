@@ -1,0 +1,5 @@
+{
+    "name": "TaAmazonAlexaParser",
+    "package_name": "ta_amazon_alexa_parser",
+    "effect": "synchronous"
+}

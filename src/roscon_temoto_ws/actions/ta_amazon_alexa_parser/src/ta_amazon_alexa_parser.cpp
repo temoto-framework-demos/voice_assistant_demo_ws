@@ -19,8 +19,8 @@
 
 /* REQUIRED BY TEMOTO */
 #include <class_loader/class_loader.h>
-#include "ta_google_assistant_parser/temoto_action.h"
-#include "ta_google_assistant_parser/macros.h"
+#include "ta_amazon_alexa_parser/temoto_action.h"
+#include "ta_amazon_alexa_parser/macros.h"
 
 #include "ros/ros.h"
 #include "temoto_action_engine/UmrfJsonGraph.h"
@@ -31,14 +31,14 @@
 #include "rapidjson/stringbuffer.h"
 
 /* 
- * ACTION IMPLEMENTATION of TaGoogleAssistantParser 
+ * ACTION IMPLEMENTATION of TaAmazonAlexaParser 
  */
-class TaGoogleAssistantParser : public TemotoAction
+class TaAmazonAlexaParser : public TemotoAction
 {
 public:
 
 // Constructor. REQUIRED BY TEMOTO
-TaGoogleAssistantParser()
+TaAmazonAlexaParser()
 {
   // ---> YOUR CONSTRUCTION ROUTINES HERE <--- //
   std::cout << __func__ << " constructed\n";
@@ -61,11 +61,11 @@ void executeTemotoAction()
   while (actionOk())
   {
     /*
-     * Make a HTTP GET query to a Google Assistant TeMoto Proxy server
+     * Make a HTTP GET query to a Google Assistant/Amazon Alexa TeMoto Proxy server
      */
     std::stringstream response;
     curlpp::Easy foo;
-    foo.setOpt( new curlpp::options::Url("https://temoto-commander-proxy.herokuapp.com/google-queries"));
+    foo.setOpt( new curlpp::options::Url("https://temoto-commander-proxy.herokuapp.com/alexa-queries"));
     foo.setOpt( new curlpp::options::WriteStream(&response));
 
     // send our request to the web server
@@ -75,39 +75,54 @@ void executeTemotoAction()
     // If the response is differen from a previous one then process the result
     if (response_str != response_str_tmp)
     {
-      TEMOTO_INFO_STREAM("Received a new query from Google Assistant. Processing ...");
+      TEMOTO_INFO_STREAM("Received a new query from Amazon Alexa. Processing ...");
       response_str = response_str_tmp;
       try
       {
         /*
-         * Parse all important parameters from the Google Action JSON response
+         * Parse all important parameters from the Amazon Alexa JSON response
          */ 
         rapidjson::Document json_doc;
         json_doc.Parse(response_str.c_str());
-        const rapidjson::Value& query_result_elem = getRootJsonElement("queryResult", json_doc);
+        const rapidjson::Value& request_elem = getRootJsonElement("request", json_doc);
+        const rapidjson::Value& intent_elem = getJsonElement("intent", request_elem);
 
-        std::string query_text = getStringFromValue(getJsonElement("queryText", query_result_elem));
-        std::string action_name = getStringFromValue(getJsonElement("action", query_result_elem));
+        std::string action_name = getStringFromValue(getJsonElement("name", intent_elem));
         std::map<std::string, PvfValue> parameters;
 
         // Get the parameters
-        for (auto it=getJsonElement("parameters", query_result_elem).MemberBegin();
-             it!=getJsonElement("parameters", query_result_elem).MemberEnd();
+        for (auto it=getJsonElement("slots", intent_elem).MemberBegin();
+             it!=getJsonElement("slots", intent_elem).MemberEnd();
              ++it)
         {
           PvfValue pvf_value;
           std::string param_name = it->name.GetString();
 
-          if (it->value.IsString())
+          if (it->value.HasMember("value"))
           {
+            const rapidjson::Value& value_elem = getJsonElement("value", it->value);
+
+            if (value_elem.IsString())
+            {
+              pvf_value.type = "string";
+              pvf_value.value_string = getStringFromValue(value_elem);
+            }
+            else if (value_elem.IsNumber())
+            {
+              pvf_value.type = "number";
+              pvf_value.value_number = getNumberFromValue(value_elem);
+            }
+          }
+          else
+          {
+            /*  
+             * TODO: Alexa does not mention anything about the potential datatype of the slot
+             * hence, at the moment this "else" statement assumes that the type of the value
+             * is a string. It would be nice if the type could be resloved dynamically
+             */
             pvf_value.type = "string";
-            pvf_value.value_string = getStringFromValue(it->value);
-          }
-          else if (it->value.IsNumber())
-          {
-            pvf_value.type = "number";
-            pvf_value.value_number = getNumberFromValue(it->value);
-          }
+            pvf_value.value_string = "";
+          }        
 
           parameters[param_name] = pvf_value;
         }
@@ -151,7 +166,7 @@ void executeTemotoAction()
         fromScratch.AddMember("suffix", "0", allocator);
 
         // Set the notation
-        fromScratch.AddMember("notation", "googleActions", allocator);
+        fromScratch.AddMember("notation", "alexaSkills", allocator);
 
         // Set the effect to "synchronous"
         fromScratch.AddMember("effect", "synchronous", allocator);
@@ -200,7 +215,7 @@ void executeTemotoAction()
         umrf_json_graph_msg_.umrf_json_strings.push_back(strbuf.GetString());
         umrf_json_graph_pub_.publish(umrf_json_graph_msg_);
 
-        TEMOTO_INFO("Done processing the Google Assistant query.");
+        TEMOTO_INFO("Done processing the Amazon Alexa query.");
       }
       catch(const std::exception& e)
       {
@@ -253,10 +268,10 @@ double getNumberFromValue(const rapidjson::Value& value)
 }
 
 // Destructor
-~TaGoogleAssistantParser()
+~TaAmazonAlexaParser()
 {
   // ---> YOUR CONSTRUCTION ROUTINES HERE <--- //
-  TEMOTO_INFO_STREAM("Destructor");
+  TEMOTO_PRINT_OF("Destructor", getUmrfPtr()->getName());
 }
 
 ros::NodeHandle nh_;
@@ -264,7 +279,7 @@ ros::Publisher umrf_json_graph_pub_;
 std::string response_str;
 temoto_action_engine::UmrfJsonGraph umrf_json_graph_msg_;
 
-}; // TaGoogleAssistantParser class
+}; // TaAmazonAlexaParser class
 
 /* REQUIRED BY CLASS LOADER */
-CLASS_LOADER_REGISTER_CLASS(TaGoogleAssistantParser, ActionBase);
+CLASS_LOADER_REGISTER_CLASS(TaAmazonAlexaParser, ActionBase);
