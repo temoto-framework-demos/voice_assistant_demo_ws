@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>roscon_temoto_ws</name>
+  <name>temoto_ws</name>
   <version>0.0.0</version>
-  <description>The roscon_temoto_ws package</description>
+  <description>The temoto_ws package</description>
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
   <!-- Authors do not have to be maintainers, but could be -->

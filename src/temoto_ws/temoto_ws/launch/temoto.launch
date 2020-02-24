@@ -1,10 +1,10 @@
 <launch>
-  <arg name="temoto_namespace" default="roscon_temoto_ws"/>
+  <arg name="temoto_namespace" default="temoto_ws"/>
   <arg name="additional_wake_words" default="everybody"/>
-  <arg name="action_packages_path" default="$(find roscon_temoto_ws)/config/action_dst.yaml" />
+  <arg name="action_packages_path" default="$(find temoto_ws)/config/action_dst.yaml" />
 
   <env name="ROSCONSOLE_FORMAT" value="[${function}] ${message}" />
-  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find roscon_temoto_ws)/config/console.conf" />  
+  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find temoto_ws)/config/console.conf" />  
 
   <group ns="$(arg temoto_namespace)">
     <!-- <node name="temoto_er_manager" pkg="temoto_er_manager" type="temoto_er_manager" output="screen" /> -->
@@ -14,5 +14,5 @@
   </group>
 
   <node name="parser_node" pkg="temoto_action_engine" type="parser_node" output="screen" 
-        args="$(find roscon_temoto_ws)/config/startup_actions umrf_graph.txt $(arg temoto_namespace)"/>
+        args="$(find temoto_ws)/config/startup_actions umrf_graph.txt $(arg temoto_namespace)"/>
 </launch>
